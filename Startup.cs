@@ -1,4 +1,5 @@
 using System.Text;
+using AutoMapper;
 using BusinessPhone.Data;
 using BusinessPhone.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -73,7 +74,9 @@ namespace BusinessPhone
                     opt.SerializerSettings.ReferenceLoopHandling =
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 }); ;
-
+ services.AddCors();
+            services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<IRepository, Repository>();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -94,6 +97,8 @@ namespace BusinessPhone
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
